@@ -8,7 +8,7 @@ set -o posix      # more strict failures in subshells
 #set -x          # enable debugging
 
 # Configure directories
-bp_dir=$(cd $(dirname $0); cd ..; pwd)
+#bp_dir=$(cd $(dirname $0); cd ..; pwd)
 BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
@@ -40,14 +40,15 @@ fi
 
 # read repo to pull into app directory
 #REPO=$(cat $BUILD_DIR/.heroku-private-build.lst)
+APP_NAME=cms-buildpack #TODO: make dynamic by repo
 echo "Pulling $REPO :: $BRANCH"
-git clone -b $BRANCH --single-branch $REPO $CACHE_DIR/cms-buildpack
-ls -lrt $CACHE_DIR/cms-buildpack
+git clone -b $BRANCH --single-branch $REPO $CACHE_DIR/$APP_NAME
+ls -lrt $CACHE_DIR/$APP_NAME
 
 #call the apps  compile script of the downloaded repository.
 if [ -f $1/app/bin/compile ]; then
-    echo "Calling app compile script $CACHE_DIR/app/bin/compile"
-    $CACHE_DIR/app/bin/compile  "$BUILD_DIR" "$CACHE_DIR" "$ENV_DIR"
+    echo "Calling app compile script $CACHE_DIR/$APP_NAME/bin/compile"
+    $CACHE_DIR/$APP_NAME/bin/compile  "$BUILD_DIR" "$CACHE_DIR" "$ENV_DIR"
     exit $?
 else
     echo "No compile file in app"
