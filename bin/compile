@@ -14,34 +14,40 @@ CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
 
 echo build user is `whoami`
-ls -lrta ~
+#ls -lrta ~
 
 # first we need to set up ssh
 sh scripts/add-sshkey.sh $ENV_DIR
 
 echo "ENV_DIR"
 echo  $ENV_DIR
-ls $ENV_DIR
+#ls $ENV_DIR
 
 # first move files in build directory to data directory
-cd $BUILD_DIR
-CURFILES=$(ls .)
-echo moving "${CURFILES} to $BUILD_DIR/data"
-mkdir data
-mv $CURFILES data
+#cd $BUILD_DIR
+#CURFILES=$(ls .)
+#echo moving "${CURFILES} to $BUILD_DIR/data"
+#mkdir data
+#mv $CURFILES data
 
 REPO=$(cat $ENV_DIR/BUILDPACK_REPO)
+BRANCH=$(cat $ENV_DIR/HEROKU_TEST_RUN_BRANCH)
+echo "Check branch $BRANCH";
+ALLOWED_BRANCHES=(dev editor prod)
+if !(printf '%s\n' "${ALLOWED_BRANCHES[@]}" | grep -xq $BRANCH); then
+  BRANCH=dev
+fi
 
 # read repo to pull into app directory
 #REPO=$(cat $BUILD_DIR/.heroku-private-build.lst)
-echo Pulling $REPO
-git clone $REPO $BUILD_DIR/app
-ls -lrt $BUILD_DIR/app
+echo "Pulling $REPO :: $BRANCH"
+git clone -b $BRANCH --single-branch $REPO $CACHE_DIR/cms-buildpack
+ls -lrt $CACHE_DIR/cms-buildpack
 
 #call the apps  compile script of the downloaded repository.
 if [ -f $1/app/bin/compile ]; then
-    echo "Calling app compile script $BUILD_DIR/app/bin/compile"
-    $BUILD_DIR/app/bin/compile  "$BUILD_DIR" "$CACHE_DIR" "$ENV_DIR"
+    echo "Calling app compile script $CACHE_DIR/app/bin/compile"
+    $CACHE_DIR/app/bin/compile  "$BUILD_DIR" "$CACHE_DIR" "$ENV_DIR"
     exit $?
 else
     echo "No compile file in app"
