@@ -1,32 +1,49 @@
 #!/usr/bin/env bash
+echo in comile script
+####### Configure environment
 
-function indent() {
-	c='s/^/       /'
-	case $(uname) in
-		Darwin) sed -l "$c";;
-		*)      sed -u "$c";;
-	esac
-}
+set -o errexit    # always exit on error
+set -o pipefail   # don't ignore exit codes when piping output
+set -o posix      # more strict failures in subshells
+#set -x          # enable debugging
 
+# Configure directories
+bp_dir=$(cd $(dirname $0); cd ..; pwd)
+BUILD_DIR=${1:-}
+CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
-ssh_key="$(cat $ENV_DIR/SSH_KEY)"
-ssh_hosts=${SSH_HOSTS:-"git@github.com"}
 
-if [ "$ssh_key" != "" ]; then
-	echo "-----> Running SSH private key setup"
+echo build user is `whoami`
+ls -lrta ~
 
-	# The .ssh needs to be located in the home directory which is different to the
-	# home directory of the built machine. The symlink resolves the issue.
-	mkdir "$1/.ssh"
-	ln -s "$1/.ssh" "$HOME/.ssh"
-	echo "$ssh_key" | base64 --decode > "$HOME/.ssh/id_rsa"
+# first we need to set up ssh
+sh scripts/add-sshkey.sh $ENV_DIR
 
-	IFS=',' read -ra HOST <<< "$ssh_hosts"
-	for i in "${HOST[@]}"; do
-		ssh -oStrictHostKeyChecking=no -T $i 2>&1 | indent
-	done
+echo "ENV_DIR"
+echo  $ENV_DIR
+ls $ENV_DIR
 
-	exit 0
+# first move files in build directory to data directory
+cd $BUILD_DIR
+CURFILES=$(ls .)
+echo moving "${CURFILES} to $BUILD_DIR/data"
+mkdir data
+mv $CURFILES data
+
+REPO=$(cat ${env_dir}/BUILDPACK_REPO)
+
+# read repo to pull into app directory
+#REPO=$(cat $BUILD_DIR/.heroku-private-build.lst)
+echo Pulling $REPO
+git clone $REPO $BUILD_DIR/app
+ls -lrt $BUILD_DIR/app
+
+#call the apps  compile script of the downloaded repository.
+if [ -f $1/app/bin/compile ]; then
+    echo "Calling app compile script $BUILD_DIR/app/bin/compile"
+    $BUILD_DIR/app/bin/compile  "$BUILD_DIR" "$CACHE_DIR" "$ENV_DIR"
+    exit $?
 else
-	echo "-----> No SSH private key"
+    echo "No compile file in app"
+    exit 1
 fi

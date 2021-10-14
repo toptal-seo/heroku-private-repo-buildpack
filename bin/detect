@@ -1,4 +1,11 @@
-#!/usr/bin/env bash
-
-echo "SSH private key"
+#!/bin/sh
 exit 0
+
+# we'll expect a file that lists the private buildpacks to apply
+#
+#if [ -f $1/.heroku-private-build.lst ]; then
+#  echo "Private buildpack detected."
+#  exit 0
+#else
+#  exit 1
+#fi
