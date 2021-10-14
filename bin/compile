@@ -48,8 +48,8 @@ ls -lrt $CACHE_DIR/$APP_NAME
 #call the apps  compile script of the downloaded repository.
 if [ -f $CACHE_DIR/$APP_NAME/bin/compile ]; then
     echo "Calling app compile script $CACHE_DIR/$APP_NAME/bin/compile"
-    cd $CACHE_DIR/$APP_NAME
-    ./bin/compile  "$BUILD_DIR" "$CACHE_DIR" "$ENV_DIR"
+    cd $CACHE_DIR/$APP_NAME/bin
+    ./compile  "$BUILD_DIR" "$CACHE_DIR" "$ENV_DIR"
     exit $?
 else
     echo "No compile file in app"
