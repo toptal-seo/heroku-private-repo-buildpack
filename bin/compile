@@ -30,7 +30,7 @@ echo moving "${CURFILES} to $BUILD_DIR/data"
 mkdir data
 mv $CURFILES data
 
-REPO=$(cat ${$ENV_DIR}/BUILDPACK_REPO)
+REPO=$(cat $ENV_DIR/BUILDPACK_REPO)
 
 # read repo to pull into app directory
 #REPO=$(cat $BUILD_DIR/.heroku-private-build.lst)
