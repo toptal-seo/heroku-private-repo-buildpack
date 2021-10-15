@@ -4,9 +4,10 @@ BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
 
-if [ ! -f $ENV_DIR/BUILDPACK_REPO ]; then
-  echo "Failed to setup repo by SSH: BUILDPACK_REPO env variable is required"
-  exit 1
-fi
+#if [ ! -f $ENV_DIR/BUILDPACK_REPO ]; then
+#  echo "Failed to setup repo by SSH: BUILDPACK_REPO env variable is required"
+#  exit 1
+#fi
+echo "CHECKING: $ENV_DIR"
 
 exit 0
