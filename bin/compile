@@ -13,6 +13,10 @@ BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
 
+export "BUILDPACK_BUILD_DIR=$BUILD_DIR"
+export "BUILDPACK_CACHE_DIR=$BUILD_DIR"
+export "BUILDPACK_ENV_DIR=$BUILD_DIR"
+
 echo build user is `whoami`
 #ls -lrta ~
 
