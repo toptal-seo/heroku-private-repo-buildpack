@@ -1,11 +1,12 @@
 #!/bin/sh
-exit 0
 
-# we'll expect a file that lists the private buildpacks to apply
-#
-#if [ -f $1/.heroku-private-build.lst ]; then
-#  echo "Private buildpack detected."
-#  exit 0
-#else
-#  exit 1
-#fi
+BUILD_DIR=${1:-}
+CACHE_DIR=${2:-}
+ENV_DIR=${3:-}
+
+if [ ! -f $ENV_DIR/BUILDPACK_REPO ]; then
+  echo "Failed to setup repo by SSH: BUILDPACK_REPO env variable is required"
+  exit 1
+fi
+
+exit 0

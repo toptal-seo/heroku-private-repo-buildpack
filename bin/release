@@ -6,6 +6,7 @@ BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
 
+echo "Releasing.."
 APP_NAME=cms-buildpack #TODO: make dynamic by repo
 CACHE_DIR/$APP_NAME/bin/release
 exit $?
