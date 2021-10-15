@@ -41,9 +41,15 @@ fi
 # read repo to pull into app directory
 #REPO=$(cat $BUILD_DIR/.heroku-private-build.lst)
 APP_NAME=cms-buildpack #TODO: make dynamic by repo
-echo "Pulling $REPO :: $BRANCH"
-git clone -b $BRANCH --single-branch $REPO $CACHE_DIR/$APP_NAME
-ls -lrt $CACHE_DIR/$APP_NAME
+if [ ! -d ./materials ]; then
+  echo "Cloning $REPO :: $BRANCH"
+  git clone $REPO $CACHE_DIR/$APP_NAME
+else
+  echo "Pulling $REPO :: $BRANCH"
+  git pull
+fi
+git switch $BRANCH
+#ls -lrt $CACHE_DIR/$APP_NAME
 
 #call the apps  compile script of the downloaded repository.
 if [ -f $CACHE_DIR/$APP_NAME/bin/compile ]; then
