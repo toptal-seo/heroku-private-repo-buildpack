@@ -8,7 +8,7 @@ ENV_DIR=${3:-}
 #  echo "Failed to setup repo by SSH: BUILDPACK_REPO env variable is required"
 #  exit 1
 #fi
-echo "CHECKING: $ENV_DIR"
+echo "CHECKING : $ENV_DIR"
 echo ${1} ${2} ${3}
 
 exit 0

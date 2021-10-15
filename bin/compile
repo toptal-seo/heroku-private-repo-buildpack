@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-echo in comile script
 ####### Configure environment
 
 set -o errexit    # always exit on error
@@ -13,18 +12,15 @@ BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
 
-export "BUILDPACK_BUILD_DIR=$BUILD_DIR"
-export "BUILDPACK_CACHE_DIR=$BUILD_DIR"
-export "BUILDPACK_ENV_DIR=$BUILD_DIR"
-
 echo build user is `whoami`
 #ls -lrta ~
 
 # first we need to set up ssh
 sh scripts/add-sshkey.sh $ENV_DIR
 
-echo "ENV_DIR"
-echo  $ENV_DIR
+echo "ENV_DIR: $ENV_DIR"
+echo "CACHE_DIR: $CACHE_DIR"
+echo $CACHE_DIR > /app/buildpack-cms-cache-dir
 #ls $ENV_DIR
 
 # first move files in build directory to data directory
