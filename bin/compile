@@ -44,11 +44,12 @@ APP_NAME=cms-buildpack #TODO: make dynamic by repo
 if [ ! -d $CACHE_DIR/$APP_NAME ]; then
   echo "Cloning $REPO :: $BRANCH"
   git clone $REPO $CACHE_DIR/$APP_NAME
+  cd $CACHE_DIR/$APP_NAME
 else
   echo "Pulling $REPO :: $BRANCH"
+  cd $CACHE_DIR/$APP_NAME
   git pull
 fi
-cd $CACHE_DIR/$APP_NAME
 git switch $BRANCH
 #ls -lrt $CACHE_DIR/$APP_NAME
 
