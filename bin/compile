@@ -48,7 +48,9 @@ if [ ! -d $CACHE_DIR/$APP_NAME ]; then
 else
   echo "Pulling $REPO :: $BRANCH"
   cd $CACHE_DIR/$APP_NAME
-  git pull
+  git fetch --all
+  git reset --hard origin/master
+  #git pull
 fi
 git switch $BRANCH
 #ls -lrt $CACHE_DIR/$APP_NAME
